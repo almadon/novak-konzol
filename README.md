@@ -1,6 +1,6 @@
 # Novak Console
 
-A web view over the [Novak](../novak/README.md) services layer: per-user
+A web view over the [Novak (srz)](../srz/README.md) services layer: per-user
 profiles (persona, memories, attached tools) and an admin surface for the MCP
 plugin catalog.
 
@@ -86,7 +86,7 @@ socket from the web surface does.
 
 `registry/mcp-servers.yaml` records **which env var names** a server needs, never
 their values. Values continue to come from macOS Keychain via `scripts/up.sh`
-(see [../novak/docs/security.md](../novak/docs/security.md), Rule 1). The console can show
+(see [../srz/docs/security.md](../srz/docs/security.md), Rule 1). The console can show
 that `OUTLINE_API_KEY` is *required and present*; it can never read or display it.
 
 ### 3. Admin gating is server-side and re-validated
@@ -121,7 +121,7 @@ things — so keep it LAN/Tailscale-only like everything else.
 - **Memory backend resolved.** OpenMemory was deprecated upstream; the stack now
   uses Mem0 self-hosted, which supports `user_id` per request. The console calls
   its REST API directly (server-side, admin key), while model clients go through
-  [novak/memory-mcp/](../novak/memory-mcp/README.md). Neither path lets a caller
+  [srz/memory-mcp/](../srz/memory-mcp/README.md). Neither path lets a caller
   name another user.
 - **Pocket ID availability coupling.** Pocket ID runs on a public VPS while Novak
   is LAN-only. A WAN outage locks admins out of a local console. Decide whether a
@@ -151,6 +151,6 @@ don't fade into the background.
 
 Enforcement lives in the novak repo's reconciler, not here — this app can
 display and edit the levels, but cannot bypass them. See
-[novak/registry/mcp-servers.yaml](../novak/registry/mcp-servers.yaml) for the
-levels and [novak/docs/decisions.md](../novak/docs/decisions.md) #10 for the
+[srz/registry/mcp-servers.yaml](../srz/registry/mcp-servers.yaml) for the
+levels and [srz/docs/decisions.md](../srz/docs/decisions.md) #10 for the
 reasoning.
