@@ -121,7 +121,7 @@ things — so keep it LAN/Tailscale-only like everything else.
 - **Memory backend resolved.** OpenMemory was deprecated upstream; the stack now
   uses Mem0 self-hosted, which supports `user_id` per request. The console calls
   its REST API directly (server-side, admin key), while model clients go through
-  [novak-integracje/memory-mcp/](https://github.com/almadon/novak-integracje/blob/HEAD/memory-mcp/README.md). Neither path lets a caller
+  [novak-integracije/memory-mcp/](https://github.com/almadon/novak-integracije/blob/HEAD/memory-mcp/README.md). Neither path lets a caller
   name another user.
 - **Pocket ID availability coupling.** Pocket ID runs on a public VPS while Novak
   is LAN-only. A WAN outage locks admins out of a local console. Decide whether a
