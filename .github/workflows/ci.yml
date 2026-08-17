@@ -1,9 +1,15 @@
-# CI for Forgejo Actions. Same syntax as GitHub Actions.
+# Builds the console and publishes its image to ghcr.io, which is what the
+# novak stack's docker-compose.yml pulls.
 #
 # FIRST RUN WILL FAIL: `npm ci` needs a package-lock.json and this project has
 # never been installed. Run `npm install`, commit the lockfile, then this
-# passes. `npm ci` is used rather than `npm install` on purpose — CI should
-# build the exact versions that were committed.
+# passes. `npm ci` is deliberate — CI should build the exact versions that were
+# committed, not silently pick up newer ones.
+#
+# Publishing uses the built-in GITHUB_TOKEN, so there is no secret to manage.
+# The package is created private on first publish; make it public once
+# (Package settings → Change visibility) or the Mac will need credentials to
+# pull it.
 
 name: ci
 
@@ -13,21 +19,25 @@ on:
     tags: ["v*"]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Typecheck and build
-    runs-on: docker
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+          cache: npm
       - run: npm ci
       - run: npm run typecheck
       - run: npm run build
         env:
           # Placeholders so the build doesn't fail on missing env. Real values
-          # come from Keychain at runtime on the mini.
+          # come from Keychain at runtime on the Mac.
           OIDC_ISSUER: https://example.invalid
           OIDC_CLIENT_ID: ci
           OIDC_CLIENT_SECRET: ci
@@ -36,20 +46,23 @@ jobs:
   image:
     name: Publish image
     needs: build
-    # Only publish from main and tags — PRs get built but not pushed.
+    # PRs get built but not published.
     if: github.event_name == 'push'
-    runs-on: docker
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v4
-      - name: Log in to Forgejo package registry
-        # VERIFY: registry host and that packages are enabled on this Forgejo.
-        # FORGEJO_TOKEN must be a repo secret with package:write scope.
+
+      - name: Log in to ghcr.io
         run: |
-          echo "${{ secrets.FORGEJO_TOKEN }}" | \
-            docker login git.a64.one -u "${{ github.actor }}" --password-stdin
+          echo "${{ secrets.GITHUB_TOKEN }}" \
+            | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
       - name: Build and push
         run: |
-          IMAGE=git.a64.one/${{ github.repository }}
+          IMAGE=ghcr.io/${{ github.repository }}
           docker build -t "$IMAGE:latest" -t "$IMAGE:${{ github.sha }}" .
           docker push "$IMAGE:latest"
           docker push "$IMAGE:${{ github.sha }}"
