@@ -1,6 +1,6 @@
 # Novak Console
 
-A web view over the [Novak (srz)](../srz/README.md) services layer: per-user
+A web view over the [Novak](https://github.com/almadon/novak) services layer: per-user
 profiles (persona, memories, attached tools) and an admin surface for the MCP
 plugin catalog.
 
@@ -86,7 +86,7 @@ socket from the web surface does.
 
 `registry/mcp-servers.yaml` records **which env var names** a server needs, never
 their values. Values continue to come from macOS Keychain via `scripts/up.sh`
-(see [../srz/docs/security.md](../srz/docs/security.md), Rule 1). The console can show
+(see [novak/docs/security.md](https://github.com/almadon/novak/blob/HEAD/docs/security.md), Rule 1). The console can show
 that `OUTLINE_API_KEY` is *required and present*; it can never read or display it.
 
 ### 3. Admin gating is server-side and re-validated
@@ -121,7 +121,7 @@ things — so keep it LAN/Tailscale-only like everything else.
 - **Memory backend resolved.** OpenMemory was deprecated upstream; the stack now
   uses Mem0 self-hosted, which supports `user_id` per request. The console calls
   its REST API directly (server-side, admin key), while model clients go through
-  [srz/memory-mcp/](../srz/memory-mcp/README.md). Neither path lets a caller
+  [novak-integracje/memory-mcp/](https://github.com/almadon/novak-integracje/blob/HEAD/memory-mcp/README.md). Neither path lets a caller
   name another user.
 - **Pocket ID availability coupling.** Pocket ID runs on a public VPS while Novak
   is LAN-only. A WAN outage locks admins out of a local console. Decide whether a
@@ -151,6 +151,6 @@ don't fade into the background.
 
 Enforcement lives in the novak repo's reconciler, not here — this app can
 display and edit the levels, but cannot bypass them. See
-[srz/registry/mcp-servers.yaml](../srz/registry/mcp-servers.yaml) for the
-levels and [srz/docs/decisions.md](../srz/docs/decisions.md) #10 for the
+[novak/registry/mcp-servers.yaml](https://github.com/almadon/novak/blob/HEAD/registry/mcp-servers.yaml) for the
+levels and [novak/docs/decisions.md](https://github.com/almadon/novak/blob/HEAD/docs/decisions.md) #10 for the
 reasoning.
