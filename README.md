@@ -4,8 +4,13 @@ A web view over the [Novak](https://github.com/almadon/novak) services layer: pe
 profiles (persona, memories, attached tools) and an admin surface for the MCP
 plugin catalog.
 
-**Status: never built or run.** No `npm install` has happened; the Auth.js v5
-(pre-1.0) API surface and the types are unproven. Expect breakage.
+**Status: builds, not yet exercised as a real UI.** CI (`ci.yml`) installs,
+builds, and publishes an image to `ghcr.io/almadon/novak-konzol` on every
+push to `main` — that much runs. Per the novak repo's `docs/STATE.md`: three
+placeholder pages and a design token layer, no real components yet, and
+"less urgent now that the portal covers the cross-app viewing want that was
+the main pressure on it." The Auth.js v5 (pre-1.0) API surface is still
+worth treating as unproven until a real login has been exercised through it.
 
 ## Relationship to the novak repo
 
@@ -154,3 +159,7 @@ display and edit the levels, but cannot bypass them. See
 [novak/registry/mcp-servers.yaml](https://github.com/almadon/novak/blob/HEAD/registry/mcp-servers.yaml) for the
 levels and [novak/docs/decisions.md](https://github.com/almadon/novak/blob/HEAD/docs/decisions.md) #10 for the
 reasoning.
+
+## Licence
+
+MIT — see [LICENSE](LICENSE).
